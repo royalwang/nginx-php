@@ -1,0 +1,8 @@
+version: "2"
+services:
+        nginx:
+                #image: tu6ge/nginx-docker-imagick
+                #image: richarvey/nginx-php-fpm:latest
+                build: .
+                ports:
+                        - "80:80"
