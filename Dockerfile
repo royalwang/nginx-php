@@ -16,8 +16,12 @@ ENV LUAJIT_INC=/usr/include/luajit-2.0
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 
-RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
-  && CONFIG="\
+RUN echo http://mirrors.ustc.edu.cn/alpine/v3.7/main/  > /etc/apk/repositories \
+	&& echo http://mirrors.ustc.edu.cn/alpine/v3.7/community/  >> /etc/apk/repositories \
+	&& apk update \
+	&& apk upgrade \
+	&& GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
+	&& CONFIG="\
     --prefix=/etc/nginx \
     --sbin-path=/usr/sbin/nginx \
     --modules-path=/usr/lib/nginx/modules \
