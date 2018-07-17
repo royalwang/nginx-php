@@ -2,6 +2,5 @@
 去掉了git
 改用了 挂载磁盘的方式
 
-tag 2 是在Dockerfile 里面加上了 apk中国镜像和composer中国镜像
-
+docker tag 2 是在Dockerfile 里面加上了 apk中国镜像和composer中国镜像
 支持 redis连接，mysql连接，socket
