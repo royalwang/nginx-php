@@ -1,6 +1,7 @@
 FROM php:7.1.12-fpm-alpine
 
 LABEL maintainer="Ric Harvey <ric@ngd.io>"
+LABEL tag=2
 
 ENV php_conf /usr/local/etc/php-fpm.conf
 ENV fpm_conf /usr/local/etc/php-fpm.d/www.conf
@@ -16,12 +17,8 @@ ENV LUAJIT_INC=/usr/include/luajit-2.0
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 
-RUN echo http://mirrors.ustc.edu.cn/alpine/v3.7/main/  > /etc/apk/repositories \
-	&& echo http://mirrors.ustc.edu.cn/alpine/v3.7/community/  >> /etc/apk/repositories \
-	&& apk update \
-	&& apk upgrade \
-	&& GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
-	&& CONFIG="\
+RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
+  && CONFIG="\
     --prefix=/etc/nginx \
     --sbin-path=/usr/sbin/nginx \
     --modules-path=/usr/lib/nginx/modules \
@@ -210,7 +207,6 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '${EXPECTED_COMPOSER_SIGNATURE}') { echo 'Composer.phar Installer verified'; } else { echo 'Composer.phar Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
     php composer-setup.php --install-dir=/usr/bin --filename=composer && \
     php -r "unlink('composer-setup.php');"  && \
-	composer config -g repo.packagist composer https://packagist.phpcomposer.com && \
     pip install -U pip && \
     pip install -U certbot && \
     mkdir -p /etc/letsencrypt/webrootauth && \
@@ -257,6 +253,12 @@ RUN echo "cgi.fix_pathinfo=0" > ${php_vars} &&\
 #    ln -s /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
 #    find /etc/php7/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
+# apk upgrade chinese ,composer upgrade chinese 
+RUN echo http://mirrors.ustc.edu.cn/alpine/v3.7/main/  > /etc/apk/repositories \
+	&& echo http://mirrors.ustc.edu.cn/alpine/v3.7/community/  >> /etc/apk/repositories \
+	&& apk update \
+	&& apk upgrade \
+	&& composer config -g repo.packagist composer https://packagist.phpcomposer.com
 
 # Add Scripts
 ADD scripts/start.sh /start.sh
